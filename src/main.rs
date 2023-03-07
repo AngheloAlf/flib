@@ -13,7 +13,7 @@ mod splat;
 mod symbols;
 mod ipl3;
 
-const TAB: &str = "    ";
+const TAB: &str = "      ";
 
 const FULL_MASK: u32 = 0xFF_FF_FF_FF;
 const ROUGH_MASK: u32 = 0xFC_00_00_00;
