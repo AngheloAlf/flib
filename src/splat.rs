@@ -4,7 +4,7 @@ use crate::{symbols::Symbol, FoundFile, TAB, Config};
 use super::libultra;
 
 pub(crate) fn print_yaml(config: &Config, found_files: &[FoundFile], ambiguous_addresses: &[usize]) {
-    let rom_start = config.rom_start.unwrap_or(0x1000) as usize;
+    let rom_start = config.rom_start.unwrap_or(0) as usize;
     let mut previous_file_text_end = if !config.binary { rom_start } else { 0 };
 
     for entry in found_files {

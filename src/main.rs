@@ -231,7 +231,7 @@ fn run(config: &Config) -> Result<(), Box<dyn Error>> {
         let mut entrypoint_word = Vec::new();
         words_from_bytes(config, &romfile[0x8..0xC], &mut entrypoint_word);
 
-        base_address = cic_info.correct_entrypoint(entrypoint_word[0]);
+        base_address = config.vram.or_else(|| {Some(cic_info.correct_entrypoint(entrypoint_word[0])) } ).unwrap();
     } else {
         start = 0;
         end = romfile.len();
@@ -250,7 +250,10 @@ fn run(config: &Config) -> Result<(), Box<dyn Error>> {
     for filepath in object_paths {
         let file_stem = filepath.file_stem().unwrap().to_string_lossy(); // Maybe
         let bin_data = fs::read(&filepath)?;
-        let obj_file = object::File::parse(&*bin_data)?;
+        let obj_file = match object::File::parse(&*bin_data) {
+            Err(e) => {eprintln!("Error: '{}', skipping file {:?}", e, filepath); continue},
+            Ok(f) => f,
+        };
 
         // print_relocs(&obj_file);
 
@@ -420,7 +423,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let config: Config = argh::from_env();
 
     if !config.binary && (config.vram.is_some()) {
-        unimplemented!("VRAM not currently supported in rom mode.");
+        //unimplemented!("VRAM not currently supported in rom mode.");
     } else if !config.binary && (config.rom_start.is_some()) {
         unimplemented!("VRAM not currently supported in rom mode.");
     }
