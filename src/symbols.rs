@@ -84,7 +84,16 @@ pub fn parse_relocated(
                 }
                 RelocationKind::Elf(elf::R_MIPS_HI16) => {
                     let mut address = (rom_words[index] & !I_TYPE_MASK) << 16;
-                    address -= stencil[index].addend << 16;
+                    let addend = stencil[index].addend << 16;
+                    //println!("{:08X}", address);
+                    //println!("{:08X}", stencil[index].addend << 16);
+                    //if address >= addend {
+                    //    address -= addend;
+                    //} else {
+                    //    
+                    //}
+                    address = address.wrapping_sub(addend);
+
                     symbols.push(Symbol {
                         name: name.to_string(),
                         address,
@@ -111,6 +120,9 @@ pub fn parse_relocated(
                             println!("{:?}", reloc);
                         }
                     }
+                }
+                RelocationKind::Elf(elf::R_MIPS_PC16) => {
+                    
                 }
                 _ => unimplemented!(),
             }

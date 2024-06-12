@@ -145,13 +145,16 @@ fn make_precise_stencil(
                     output[index].addend &= !mask;
                     output[index].mask &= mask;
                 }
-                RelocationKind::Elf(elf::R_MIPS_LO16) | RelocationKind::Elf(elf::R_MIPS_HI16) => {
+                RelocationKind::Elf(elf::R_MIPS_LO16) | RelocationKind::Elf(elf::R_MIPS_HI16) | RelocationKind::Elf(elf::R_MIPS_PC16) => {
                     let mask = I_TYPE_MASK;
                     output[index].word &= mask;
                     output[index].addend &= !mask;
                     output[index].mask &= mask;
                 }
-                _ => unimplemented!(),
+                _ => {
+                    eprintln!("{:?}", reloc.1.kind());
+                    unimplemented!();
+                },
             }
         }
     }

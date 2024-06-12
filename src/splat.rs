@@ -32,7 +32,7 @@ pub(crate) fn print_yaml(config: &Config, found_files: &[FoundFile], ambiguous_a
 
         print!(
             "{}- [{:#X}, {}, {}]",
-            TAB, entry.text_start + rom_start, filetype, entry.stem
+            TAB, entry.text_start, filetype, entry.stem
         );
 
         if comment.len() > 0 {
